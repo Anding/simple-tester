@@ -37,7 +37,7 @@
 
 \ compute h1 by hashing x1 and h0
 : hash ( x1 h0 -- h1)
-	1+ xor										\ hash may be a simple function initially but upgraded later
+	swap 1+ xor									\ hash may be a simple function initially but upgraded later
 ;												\ to improve collision detection and test reliability
 
 \ hash n items from the stack and return the hash code
