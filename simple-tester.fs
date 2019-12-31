@@ -41,7 +41,7 @@
 
 \ halt the system
 : halt
-	quit		\ for gforth testing
+	bye		\ for gforth testing
 ;
 
 \ compute h1 by hashing x1 and h0
