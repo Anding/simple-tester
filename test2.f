@@ -1,3 +1,4 @@
+ CR
 Tstart
 ( 1) T{ 1 }T 2 ==			\ fails on 1
 ( 2) T{ 1 2 }T 1 2 ==

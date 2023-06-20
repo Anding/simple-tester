@@ -23,10 +23,10 @@
 \ possible advantages
 \ (i) 	2 cells only of RAM required for operation
 \ (ii)	testing scope is limited only by stack depth
-\ (iii) no stack gynmastics, easy to write the necessary code words in brief assembly language
+\ (iii) 	no stack gynmastics, easy to write the necessary code words in brief assembly language
 \ (iv)	fast, advantageous for power-on-self-test-applications
 \ disadvantage
-\ (i)	false positive risk - hash collissions may allow a test to pass that should actually have been failed
+\ (i)		false positive risk - hash collissions may allow a test to pass that should actually have been failed
 
 \ the following words are expected to be available as code words on the target system, other words are utility words
 \ Tstart Tend T{ T} ==
@@ -36,12 +36,12 @@
 
 \ report the test number to a numeric output device, such as a seven-segment display
 : T.
-	.			\ for gforth testing
+	.			\ for a desktop Forth
 ;
 
 \ halt the system
-: halt
-	bye		\ for gforth testing
+: halt-system
+	quit		\ for a desktop Forth
 ;
 
 \ compute h1 by hashing x1 and h0
@@ -71,29 +71,30 @@ variable Tdepth
 \ start testing
 : Tstart
 	0 Tcount !
+	0 T.
 ;
 
 \ start a unit test
 : T{ ( )
 	Tcount @ 1+ dup T. Tcount !					\ increment and report the test number
-	depth Tdepth !								\ save the stack depth before the module runs
+	depth Tdepth !										\ save the stack depth before the module runs
 ;
 
 \ finish a unit test,
 : }T ( y1 y2 ... yn -- hy) 						\ y1, y2 ... yn are the actual outputs
 	depth Tdepth @ -	( y1 y2 ... yn Ny)		\ Ny  = no. outputs created by running the module
-	hash-n				( hy)					\ hy = hash value of the actual outputs
-	depth Tdepth !		( hy)					\ save the stack depth before the expected outputs
+	hash-n				( hy)							\ hy = hash value of the actual outputs
+	depth Tdepth !		( hy)							\ save the stack depth before the expected outputs
 ;
 
 \ compare actual output with expected output
 : == ( hy x1 x2 ... xn --)
-	depth Tdepth @ -	( hy x1 x2 .. xn Nx)	\ Nx = no. outputs expected
-	hash-n				( hy hx)				\ hx = hash value of the expected outputs
-	= 0= IF halt THEN							\ hash codes didn't match, stop the system
+	depth Tdepth @ -	( hy x1 x2 .. xn Nx)		\ Nx = no. outputs expected
+	hash-n				( hy hx)						\ hx = hash value of the expected outputs
+	= 0= IF halt-system THEN						\ hash codes didn't match, stop the system
 ;
 
 \ signal end of testing
 : Tend  ( --)
-	65535 ( 0xFFFF) T.							\ some at-a-glance value to indicate successful completion
+	65535 ( 0xFFFF) T.								\ some at-a-glance value to indicate successful completion
 ;
