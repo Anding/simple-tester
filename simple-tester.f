@@ -46,14 +46,14 @@
 
 \ compute h1 by hashing x1 and h0
 : hash ( x1 h0 -- h1)
-	swap 1+ xor									\ hash may be any simple function initially but upgraded later
-;												\ 	to minimize the risk of collisions
+	swap 1+ xor								\ hash may be any simple function initially but upgraded later
+;												\ make sure it is not symmetric since stack reversal is a common error
 
 \ hash n items from the stack and return the hash code
 : hash-n ( x1 x2 ... xn n -- h)
 	0 >R										\ put the initial hash value on the return stack
 	BEGIN
-		dup 0 >									\ confirm at least one value to process
+		dup 0 >								\ confirm at least one value to process
 	WHILE
 		swap R> hash >R
 		1-
@@ -97,4 +97,16 @@ variable Tdepth
 \ signal end of testing
 : Tend  ( --)
 	65535 ( 0xFFFF) T.								\ some at-a-glance value to indicate successful completion
+;
+
+\ extension words, perhaps for desktop systems
+\ reference implementations here in Forth
+\ ===========================================================================================================
+
+\ hash a string to a single value on stack
+: hashs ( c-addr u -- h)
+	swap 2dup + swap ( u end start)
+		?do												\ Let h0 = u
+			i @ ( h_i x) swap hash ( h_j)			\ j = i + 1
+		loop
 ;
