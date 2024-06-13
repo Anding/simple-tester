@@ -105,8 +105,8 @@ variable Tdepth
 
 \ hash a string to a single value on stack
 : hashs ( c-addr u -- h)
-	swap 2dup + swap ( u end start)
+	swap 2dup + 1- swap ( u end start)
 		?do												\ Let h0 = u
-			i @ ( h_i x) swap hash ( h_j)			\ j = i + 1
+			i c@ ( h_i x) swap hash ( h_j)			\ j = i + 1
 		loop
 ;
