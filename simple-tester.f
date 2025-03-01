@@ -46,7 +46,7 @@
 
 \ compute h1 by hashing x1 and h0
 : hash ( x1 h0 -- h1)
-	31 * swap 1+ xor						\ hash may be any simple function initially but upgraded later
+	31 * swap 13 + xor					\ hash may be any simple function initially but upgraded later
 ;												\ make sure it is not symmetric since stack reversal is a common error
 
 \ hash n items from the stack and return the hash code
