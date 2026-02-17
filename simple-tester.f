@@ -104,9 +104,21 @@ variable Tdepth
 \ ===========================================================================================================
 
 \ hash a string to a single value on stack
-: hashs ( c-addr u -- h)
+: hashS ( c-addr u -- h)
 	swap 2dup + swap ( u end+1 start)
 		?do												\ Let h0 = u
 			i c@ ( h_i x) swap hash ( h_j)			\ j = i + 1
 		loop
 ;
+
+\ hash a file to a single value on stack
+: hashF { c-addr u | fileid bytes caddr -- h }
+    c-addr u r/o open-file IF halt-system THEN -> fileid
+    fileid file-size nip drop -> bytes
+    bytes allocate drop -> caddr
+    caddr bytes fileid read-file IF halt-system THEN 
+    caddr swap hashS
+    caddr free drop
+    fileid close-file drop
+;
+    
