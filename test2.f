@@ -2,6 +2,6 @@
 Tstart
 ( 1) T{ 1 }T 2 ==			\ fails on 1
 ( 2) T{ 1 2 }T 1 2 ==
-( 3) T{ 2 1 }T 2 1  ==
+( 3) T{ 2 1 }T 2 2  ==      \ fails on 3
 ( 4) T{ 1 2 3 }T 1 2 3 ==
 Tend

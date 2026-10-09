@@ -25,13 +25,13 @@
 \ compute h1 by hashing x1 and h0
 : hash ( x1 h0 -- h1)
 	31 * swap 13 + xor					\ hash may be any simple function initially but upgraded later
-;												\ make sure it is not symmetric since stack reversal is a common error
+;										\ make sure it is not symmetric since stack reversal is a common error
 
 \ hash n items from the stack and return the hash code
 : hash-n ( x1 x2 ... xn n -- h)
-	0 >R										\ put the initial hash value on the return stack
+	0 >R								\ put the initial hash value on the return stack
 	BEGIN
-		dup 0 >								\ confirm at least one value to process
+		dup 0 >							\ confirm at least one value to process
 	WHILE
 		swap R> hash >R
 		1-
@@ -51,6 +51,7 @@ variable Tfailures
 : Tstart
 	0 Tcount !
 	0 Tfailures !
+	s" simple-tester: %idir%" expand cr type cr
 ;
 
 \ start a unit test
@@ -70,21 +71,25 @@ variable Tfailures
 : == ( hy x1 x2 ... xn --)
 	depth Tdepth @ -	( hy x1 x2 .. xn Nx)		\ Nx = no. outputs expected
 	hash-n				( hy hx)						\ hx = hash value of the expected outputs
-	= 0= IF
+	= IF
+	    Tcount @ . 
+	ELSE
 		1 Tfailures +!
-		cr s" TEST-FAIL " type Tcount @ . cr
+		cr ." FAIL@ " Tcount @ . cr
 	THEN
 ;
 
 \ signal end of testing
 : Tend  ( --)
+    Tfailures @ dup dup
 	cr
-	Tfailures @ IF
-		s" TEST-FAIL " type Tfailures @ .
-		s" OF " type Tcount @ . cr
+    s" TESTS PASSED " type Tcount @ ( fails) swap - . cr
+	s" TESTS FAILED " type ( fails) . cr	
+	( fails) IF
+	    ." REGRESSION FAILED !!!!!!!!!!!!!!!!!!!!!!!"
 	ELSE
-		s" TEST-PASS " type Tcount @ . cr
-	THEN
+		." REGRESSION PASSED ***********************"
+	THEN cr
 ;
 
 \ extension words, perhaps for desktop systems
@@ -94,7 +99,7 @@ variable Tfailures
 \ hash a string to a single value on stack
 : hashS ( c-addr u -- h)
 	swap 2dup + swap ( u end+1 start)
-		?do												\ Let h0 = u
+		?do											\ Let h0 = u
 			i c@ ( h_i x) swap hash ( h_j)			\ j = i + 1
 		loop
 ;
