@@ -12,17 +12,22 @@ T{ 1 2 + }T 3 ==
 Tend
 ```
 
-`==` records a mismatch and continues, reporting the failing test number.
-`Tend` prints one authoritative desktop result:
+`==` prints the passing test number, or records a mismatch and prints
+`FAIL@ <number>`. `Tend` prints the totals followed by one authoritative
+desktop result:
 
 ```text
-TEST-PASS 1
+TESTS PASSED 1
+TESTS FAILED 0
+REGRESSION PASSED ***********************
 ```
 
 or:
 
 ```text
-TEST-FAIL 1 OF 4
+TESTS PASSED 3
+TESTS FAILED 1
+REGRESSION FAILED !!!!!!!!!!!!!!!!!!!!!!!
 ```
 
 The test file does not control interpreter lifetime. In particular, it does
